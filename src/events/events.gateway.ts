@@ -17,7 +17,7 @@ export class EventsGateway implements OnGatewayInit {
 
   @SubscribeMessage('connection')
   handleConnection(@ConnectedSocket() client: Socket) {
-    console.log(client);
+    // console.log(client);
     client.broadcast.emit('events', 'I am here!!!');
   }
 
@@ -27,8 +27,8 @@ export class EventsGateway implements OnGatewayInit {
     @ConnectedSocket() client: Socket,
   ): WsResponse<unknown> {
     const event = 'events';
-    console.log(data);
-    console.log(client);
+    // console.log(data);
+    // console.log(client);
     return { event, data };
   }
 
@@ -40,7 +40,7 @@ export class EventsGateway implements OnGatewayInit {
   }
 
   afterInit(server: Server) {
-    console.log('init');
+    console.log('==========init==========');
     console.log(server);
   }
 }
