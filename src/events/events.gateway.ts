@@ -17,8 +17,40 @@ export class EventsGateway implements OnGatewayInit {
 
   @SubscribeMessage('connection')
   handleConnection(@ConnectedSocket() client: Socket) {
-    // console.log(client);
     client.broadcast.emit('events', 'I am here!!!');
+  }
+
+  @SubscribeMessage('disconnect')
+  handleDisconnect(@ConnectedSocket() client: Socket) {
+    console.log('disconnecting');
+  }
+
+  @SubscribeMessage('room_list')
+  handleRoomList(@ConnectedSocket() client: Socket): WsResponse<unknown> {
+    const event = 'room_list';
+    const rooms = this.server.sockets.adapter.rooms;
+    return { event, data: rooms };
+  }
+
+  @SubscribeMessage('join_room')
+  handleJoinRoom(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() roomName: string,
+  ): WsResponse<unknown> {
+    const event = 'join_room_response';
+    client.join(roomName);
+
+    return { event, data: roomName };
+  }
+
+  @SubscribeMessage('new_message')
+  handleNewMessage(
+    @ConnectedSocket() client: Socket,
+    @MessageBody()
+    data: { roomName: string; nickname: string; message: string },
+  ) {
+    const { roomName, nickname, message } = data;
+    this.server.to(roomName).emit('new_message', message);
   }
 
   @SubscribeMessage('events')

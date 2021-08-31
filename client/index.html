@@ -10,31 +10,34 @@
       integrity="sha384-toS6mmwu70G0fw54EGlWWeA4z3dyJ+dlXBtSURSKN4vyRFOcxd3Bzjj/AoOwY+Rg"
       crossorigin="anonymous"
     ></script>
-    <script>
-      const socket = io('http://localhost:8000');
-
-      socket.on('connect', () => {
-        console.log('connected');
-
-        socket.emit('events', {
-          test: 'test',
-        });
-        socket.emit('identity', 0, (res) => {
-          console.log('Identity: ', res);
-        });
-
-        socket.on('events', (socket) => {
-          console.log(socket);
-        });
-      });
-    </script>
   </head>
   <body>
-    <button
-      id="events"
-      onclick="socket.broadcast.emit('events', {test: 'test'})"
-    >
+    <button id="events" onclick="socket.emit('events', {test: 'test'})">
       trigger events
     </button>
+    <button id="status">Current Socket Status</button>
+
+    <div>Room Number</div>
+    <div id="room">
+      <form>
+        <input id="room-input" type="text" />
+        <button id="room-enter-button">send</button>
+      </form>
+    </div>
+
+    <div>Current Room</div>
+    <h2 id="current-room"></h2>
+
+    <div>Chatting</div>
+    <div id="message">
+      <form>
+        <input id="message-input" type="text" />
+        <button id="send-message">send</button>
+      </form>
+    </div>
+    <div id="chat">
+      <ul id="chat-list"></ul>
+    </div>
   </body>
+  <script src="./app.js"></script>
 </html>
